@@ -1,0 +1,5 @@
+counter nginx_5xx
+
+/$/ {
+  nginx_5xx++
+}

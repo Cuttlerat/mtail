@@ -1,0 +1,2 @@
+/var/log/nginx/5xx.log
+/var/log/mysql.log
