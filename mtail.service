@@ -1,0 +1,19 @@
+# Installing as a service
+#
+# yes | cp -f /mtail/mtail.service /etc/systemd/system/
+# systemctl daemon-reload ; systemctl -f enable mtail.service ; systemctl start mtail
+#
+
+[Unit]
+Description=mtail logging service
+After=nginx.service
+Requires=nginx.service
+
+[Service]
+Type=simple
+TimeoutSec=10
+WorkingDirectory=/mtail/
+ExecStart=/mtail/run.sh
+
+[Install]
+WantedBy=default.target

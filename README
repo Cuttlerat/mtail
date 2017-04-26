@@ -1,0 +1,7 @@
+[!] NOTES
+Make shure, what mtail working dir is /mtail
+
+[!] Installing as a service
+
+yes | cp -f /mtail/mtail.service /etc/systemd/system/
+systemctl daemon-reload ; systemctl -f enable mtail.service ; systemctl start mtail
