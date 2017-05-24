@@ -1,0 +1,34 @@
+#
+# nginx.config
+#
+#	log_format mtail  'status::$status;;host::$host;;request_time::$request_time';
+#	access_log  /var/log/nginx/mtail.log mtail;
+#
+# Example output
+#
+#	status::200;;host::fs.dodopizza.kz;;request_time::0.006
+#	status::200;;host::tracker.dodopizza.ru;;request_time::0.203
+#
+
+counter nginx_requests by status,host
+counter nginx_5xx by host
+gauge nginx_request_time by host
+
+/status::(?P<status>\d{3});;host::(?P<host>[\w.]+);;request_time::(?P<request_time_seconds>\d+)/ {
+
+	# Total requests by status and host
+	nginx_requests[$status][$host]++
+
+	# Request time by host
+	# Да, по хорошему, надо считать среднюю, но разброс такой, что на 10 запросов значением 0.001 приходится 1=100
+	# и тут уже надо использовать центили, но это геморно, поэтому пусть отдает последнее число
+	nginx_request_time[$host] = $request_time_seconds
+	
+	# 5xx by host
+	$status >= 500 {
+		$status <= 599 {
+			nginx_5xx[$host]++
+		}
+	}
+
+}

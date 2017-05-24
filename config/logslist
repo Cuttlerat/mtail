@@ -1,2 +1,1 @@
-/var/log/nginx/5xx.log
-/var/log/mysql.log
+/var/log/nginx/mtail.log
