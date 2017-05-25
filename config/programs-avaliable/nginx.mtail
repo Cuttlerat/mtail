@@ -10,25 +10,25 @@
 #	status::200;;host::taskserver.dodopizza.ru;;request_time::0.010;;upstream_addr::10.0.1.9:80
 #
 
-counter nginx_requests by status,host
-counter nginx_5xx by host
+counter nginx_requests by status,country,service
+counter nginx_5xx by coutry,service
 counter nginx_5xx_by_upstream by upstream_addr
-gauge nginx_request_time by host
+gauge nginx_request_time by country,service
 
-/status::(?P<status>\d{3});;host::(?P<host>[\w.]+);;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+)/ {
+/status::(?P<status>\d{3});;host::(?P<service>\w*)\.?dodopizza\.(?P<country>[\w.]+);;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+)/ {
 
 	# Total requests by status and host
-	nginx_requests[$status][$host]++
+	nginx_requests[$status][$country][$service]++
 
 	# Request time by host
 	# Да, по хорошему, надо считать среднюю, но разброс такой, что на 10 запросов значением 0.001 приходится 1=100
 	# и тут уже надо использовать центили, но это геморно, поэтому пусть отдает последнее число
-	nginx_request_time[$host] = $request_time_seconds
+	nginx_request_time[$country][$service] = $request_time_seconds
 	
 	# 5xx by host
 	$status >= 500 {
 		$status <= 599 {
-			nginx_5xx[$host]++
+			nginx_5xx[$country][$service]++
 			nginx_5xx_by_upstream[$upstream_addr]++
 		}
 	}
