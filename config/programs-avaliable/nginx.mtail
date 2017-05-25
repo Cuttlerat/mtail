@@ -12,6 +12,7 @@
 
 counter nginx_requests by status,host
 counter nginx_5xx by host
+counter nginx_5xx_by_upstream by upstream_addr
 gauge nginx_request_time by host
 
 /status::(?P<status>\d{3});;host::(?P<host>[\w.]+);;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+)/ {
@@ -28,6 +29,7 @@ gauge nginx_request_time by host
 	$status >= 500 {
 		$status <= 599 {
 			nginx_5xx[$host]++
+			nginx_5xx_by_upstream[$upstream_addr]++
 		}
 	}
 
