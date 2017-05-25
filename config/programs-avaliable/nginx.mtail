@@ -1,20 +1,20 @@
 #
 # nginx.config
 #
-#	log_format mtail  'status::$status;;host::$host;;request_time::$request_time';
+#	log_format mtail  'status::$status;;host::$host;;request_time::$request_time;;upstream_addr::$upstream_addr';
 #	access_log  /var/log/nginx/mtail.log mtail;
 #
 # Example output
 #
-#	status::200;;host::fs.dodopizza.kz;;request_time::0.006
-#	status::200;;host::tracker.dodopizza.ru;;request_time::0.203
+#	status::200;;host::motivationboard.dodopizza.ru;;request_time::0.027;;upstream_addr::10.0.1.10:80
+#	status::200;;host::taskserver.dodopizza.ru;;request_time::0.010;;upstream_addr::10.0.1.9:80
 #
 
 counter nginx_requests by status,host
 counter nginx_5xx by host
 gauge nginx_request_time by host
 
-/status::(?P<status>\d{3});;host::(?P<host>[\w.]+);;request_time::(?P<request_time_seconds>\d+)/ {
+/status::(?P<status>\d{3});;host::(?P<host>[\w.]+);;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+)/ {
 
 	# Total requests by status and host
 	nginx_requests[$status][$host]++
