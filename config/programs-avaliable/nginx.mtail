@@ -11,7 +11,7 @@
 #
 
 counter nginx_requests by status,country,service
-counter nginx_5xx by coutry,service
+counter nginx_5xx by country,service
 counter nginx_5xx_by_upstream by upstream_addr
 gauge nginx_request_time by country,service
 
