@@ -15,7 +15,7 @@ counter nginx_5xx by coutry,service
 counter nginx_5xx_by_upstream by upstream_addr
 gauge nginx_request_time by country,service
 
-/status::(?P<status>\d{3});;host::(?P<service>\w*)\.?dodopizza\.(?P<country>[\w.]+);;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+)/ {
+/status::(?P<status>\d{3});;host::(?P<service>[\w\.]*)\.(?P<country>[\w.]{2});;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+)/ {
 
 	# Total requests by status and host
 	nginx_requests[$status][$country][$service]++
