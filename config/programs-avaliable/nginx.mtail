@@ -6,16 +6,16 @@
 #
 # Example output
 #
-#	status::200;;host::motivationboard.dodopizza.ru;;request_time::0.027;;upstream_addr::10.0.1.10:80
-#	status::200;;host::taskserver.dodopizza.ru;;request_time::0.010;;upstream_addr::10.0.1.9:80
+#	status::200;;host::tracker.dodopizza.ru;;request_time::0.079;;upstream_addr::10.0.1.7:80;;request::GET /OrdersProcessing/Processing/PartialOrdersDeliveryToStationary2?_=1495721753
 #
 
 counter nginx_requests by status,country,service
 counter nginx_5xx by coutry,service
 counter nginx_5xx_by_upstream by upstream_addr
-gauge nginx_request_time by country,service
+counter nginx_5xx_by_path by 
+#gauge nginx_request_time by country,service
 
-/status::(?P<status>\d{3});;host::(?P<service>[\w\.]*)\.(?P<country>[\w.]{2});;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+)/ {
+/status::(?P<status>\d{3});;host::(?P<service>[\w\.]*)\.(?P<country>[\w.]{2});;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+);;request::\S+\s(?P<request>\S+)[\?$]/ {
 
 	# Total requests by status and host
 	nginx_requests[$status][$country][$service]++
@@ -23,7 +23,7 @@ gauge nginx_request_time by country,service
 	# Request time by host
 	# Да, по хорошему, надо считать среднюю, но разброс такой, что на 10 запросов значением 0.001 приходится 1=100
 	# и тут уже надо использовать центили, но это геморно, поэтому пусть отдает последнее число
-	nginx_request_time[$country][$service] = $request_time_seconds
+	# nginx_request_time[$country][$service] = $request_time_seconds
 	
 	# 5xx by host
 	$status >= 500 {
