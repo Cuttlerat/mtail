@@ -12,7 +12,7 @@
 counter nginx_requests by status,country,service
 counter nginx_5xx by country,service
 counter nginx_5xx_by_upstream by upstream_addr
-counter nginx_5xx_by_path by 
+counter nginx_5xx_by_request by request
 #gauge nginx_request_time by country,service
 
 /status::(?P<status>\d{3});;host::(?P<service>[\w\.]*)\.(?P<country>[\w.]{2});;request_time::(?P<request_time_seconds>\d+)[\d\.]*;;upstream_addr::(?P<upstream_addr>[\d\.\:]+);;request::\S+\s(?P<request>\S+)[\?$]/ {
@@ -30,6 +30,7 @@ counter nginx_5xx_by_path by
 		$status <= 599 {
 			nginx_5xx[$country][$service]++
 			nginx_5xx_by_upstream[$upstream_addr]++
+			nginx_5xx_by_request[$request]++
 		}
 	}
 
