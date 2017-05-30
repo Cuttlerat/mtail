@@ -1,5 +1,5 @@
 ### Note
-Make shure, what mtail working dir is /mtail
+Make sure, what mtail working dir is /mtail
 
 ### Installing as a service
 
